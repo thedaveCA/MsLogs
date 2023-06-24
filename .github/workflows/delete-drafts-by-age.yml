@@ -1,0 +1,40 @@
+name: Delete release drafts, by age
+
+on:
+  workflow_dispatch:
+    inputs:
+      threshold:
+        description: 'threshold'
+        type: choice
+        options: 
+        - 1s
+        - 1h
+        - 1d
+        - 1w
+        - 1m
+        - 1y
+        default: '1d'
+        required: true
+jobs:
+  on-demand:
+    name: On-demand - ${{ inputs.threshold }}
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete drafts older than ${{ inputs.threshold }}
+        uses: hugo19941994/delete-draft-releases@v1.0.0
+        with:
+          threshold: ${{ inputs.threshold }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  automatic:
+    name: Automatic - Older than 7d
+    if: github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete drafts older than 7d
+        uses: hugo19941994/delete-draft-releases@v1.0.0
+        with:
+          threshold: 7d
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
