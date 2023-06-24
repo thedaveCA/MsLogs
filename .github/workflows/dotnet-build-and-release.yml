@@ -1,0 +1,120 @@
+name: dotnet build and release
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '**.cs'
+      - '**.csproj'
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get version
+        run: |
+          BUILDVERSION=$(cat .github/version.txt)
+          echo BUILDVERSION=$BUILDVERSION
+          if [ "refs/heads/main" = "$GITHUB_REF" ]; then BRANCHPREFIX=; else BRANCHPREFIX=${{ github.ref_name }}-;fi
+          RELVERSION=$BUILDVERSION
+          PREVERSION=$BUILDVERSION+$GITHUB_RUN_ID.$GITHUB_RUN_ATTEMPT
+          if [ "refs/heads/main" = "$GITHUB_REF" ]; then VERSION=$RELVERSION; else VERSION=$PREVERSION ;fi
+          echo BRANCHPREFIX=$BRANCHPREFIX >> $GITHUB_ENV
+          echo VERSION=$VERSION >> $GITHUB_ENV
+          echo RELVERSION=$RELVERSION >> $GITHUB_ENV
+          echo PREVERSION=$PREVERSION >> $GITHUB_ENV
+          echo BRANCHPREFIX=$BRANCHPREFIX
+          echo VERSION=$VERSION
+          echo RELVERSION=$RELVERSION
+          echo PREVERSION=$PREVERSION
+
+      - name: Update .csproj with version
+        run: |
+          find ~ -name "*.csproj" -exec sed -i -r "s/<Version(Prefix)?>.*<\/Version(Prefix)?>/<Version>$VERSION<\/Version>/" {} +
+
+      - name: Find source files
+        run: |
+          SOURCEDIR=$(find -name "*.sln" -print -or -name "*.csproj" -print | head -n 1 | sed -r "s/(.*)\/[^/]+\.(sln$|csproj)/\1/") 
+          SOURCEDIR=.
+          echo SOURCEDIR=$SOURCEDIR >> $GITHUB_ENV
+          echo Found "$SOURCEDIR"
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Nuget - Retrieve cache
+        uses: actions/cache/restore@v3
+        id: cache-retrieve
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-
+
+      - name: dotnet restore
+        run: |
+          cd "${{ env.SOURCEDIR }}"
+          dotnet restore --use-lock-file --runtime win-x64
+          echo PACKAGESHASH=$(ls ~/.nuget/packages | sha1sum - | cut -d ' ' -f1) >> $GITHUB_ENV
+  
+      - name: Nuget - Save cache
+        uses: actions/cache/save@v3
+        id: cache-save
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ env.PACKAGESHASH }}
+
+#          dotnet build    -c Release            --no-restore
+
+      - name: dotnet build
+        run: |
+          cd "${{ env.SOURCEDIR }}"
+          dotnet test     -c Release -r win-x64 --no-restore
+
+      - name: dotnet publish and ZIP
+        run: |
+          cd "${{ env.SOURCEDIR }}"
+          mkdir "binoutput"
+          dotnet publish  -c Release -r win-x64 --no-restore --self-contained false --output "binoutput"
+          find ./binoutput -iname "*.exe" -exec zip --junk-paths ~/binaries.zip {} +
+          rm -r "binoutput"
+
+      - name: dotnet publish and ZIP self-contained
+        run: |
+          cd "${{ env.SOURCEDIR }}"
+          mkdir "binoutput"
+          dotnet publish  -c Release -r win-x64 --no-restore --self-contained true --output "binoutput"
+          find ./binoutput -iname "*.exe" -exec zip --junk-paths ~/binaries-selfcontained.zip {} +
+          rm -r "binoutput"
+
+      - name: find ZIP
+        run: |
+          find ~ -name "*.zip" -print
+
+#  release:
+#    permissions:
+#      contents: write
+#    runs-on: ubuntu-latest
+#    steps:
+      - name: GitHub - Tag
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifactErrorsFailBuild: true
+          artifacts: "/home/runner/*.zip"
+          draft: false
+          generateReleaseNotes: true
+          makeLatest: ${{ github.ref_name == 'main' }}
+          prerelease: ${{ github.ref_name != 'main' }}
+          removeArtifacts: true
+          replacesArtifacts: true
+          omitBodyDuringUpdate: false
+          name: ${{ env.BRANCHPREFIX }}v${{ env.RELVERSION }}
+          tag: ${{ env.BRANCHPREFIX }}v${{ env.VERSION }}
+          body: ${{ env.BRANCHPREFIX }}(v${{ env.PREVERSION }})
+          updateOnlyUnreleased: true
