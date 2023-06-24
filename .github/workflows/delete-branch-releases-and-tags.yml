@@ -1,0 +1,62 @@
+name: Delete releases and tags, by branch prefix
+on: 
+  delete:
+  workflow_dispatch:
+    inputs:
+      delete_type:
+        description: 'delete_type'
+        type: choice
+        default: prerelease
+        options: 
+          - release
+          - prerelease
+      delete_tag_pattern:
+        description: 'delete_tag_pattern'
+        type: string
+        required: false
+
+permissions: write-all
+
+jobs:
+  on-demand:
+    name: 'On-demand - Deleting (${{ inputs.delete_type }}): ${{ inputs.delete_tag_pattern }}*'
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: jay2610/delete-older-releases@1.0.0
+        with:
+          delete_tag_pattern: ${{ inputs.delete_tag_pattern }}
+          delete_type: ${{ inputs.delete_type }}
+          delete_tags: true
+          keep_latest: 0
+          target_branch: 'main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  branchdeleteprerelease:
+    name: 'Branch cleanup, Deleting (prerelease): ${{ github.event.ref }}-*'
+    if: github.event_name != 'workflow_dispatch' && github.event.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: jay2610/delete-older-releases@1.0.0
+        with:
+          delete_tag_pattern: ${{ github.event.ref }}-
+          delete_type: prerelease
+          delete_tags: true
+          keep_latest: 0
+          target_branch: 'main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  branchdeleterelease:
+    name: 'Branch cleanup, Deleting (release): ${{ github.event.ref }}-*'
+    if: github.event_name != 'workflow_dispatch' && github.event.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: jay2610/delete-older-releases@1.0.0
+        with:
+          delete_tag_pattern: ${{ github.event.ref }}-
+          delete_type: release
+          delete_tags: true
+          keep_latest: 0
+          target_branch: 'main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

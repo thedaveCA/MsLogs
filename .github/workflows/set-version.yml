@@ -1,0 +1,37 @@
+name: Set version (.csproj)
+on: 
+  workflow_dispatch:
+    inputs:
+      new_version:
+        description: 'version (x.y.z)'
+        type: string
+        required: true
+        default: 0.0.05
+
+jobs:
+  update_version:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v3
+
+      - name: Set version ${{ inputs.new_version }} in version.txt
+        run: |
+          echo ${{ inputs.new_version }} > .github/version.txt; git add .github/version.txt
+      - name: Set version ${{ inputs.new_version }} on .csproj
+        run: |
+          find ~ -name "*.csproj" -exec sed -i -r "s/<Version>.*<\/Version>/<Version>${{ inputs.new_version }}<\/Version>/" {} + -exec sed -i -r "s/<VersionPrefix>.*<\/VersionPrefix>/<VersionPrefix>${{ inputs.new_version }}<\/VersionPrefix>/" {} + -exec git add {} +
+#      - name: Set version ${{ inputs.new_version }} on set-version.yml # PAT REQUIRED
+#        run: |
+#          find ~ -name "set-version.yml" -exec sed -i -r "s/default: [0-9]+\.[0-9]+\.[0-9]+/default: ${{ inputs.new_version }}/" {} + -exec git add {} +
+
+      - name: "git commit"
+        run: |
+          git config user.name thedaveCA
+          git config user.email 12719274+thedaveCA@users.noreply.github.com
+          git commit -m "Bump version to ${{ inputs.new_version }}"
+
+      - name: "git push"
+        run: |
+          git push
