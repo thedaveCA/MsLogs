@@ -1,0 +1,237 @@
+MSLogParser
+Description:
+  A tool to assist with MailStore log files.
+
+Usage:
+  MSLogParser [command] [options]
+
+Options:
+  --version       Show version information
+  -?, -h, --help  Show help and usage information
+
+Commands:
+  modify                                     Modify the log to add, modify or obscure some information.
+  filter                                     Filter the log
+  report                                     Analyze logfile and generate reports
+  ServerUnmappableException <mailstore.log>  Generate a report showing unique e-mail addresses from "ServerUnmappableException" log entries.
+
+modify
+Description:
+  Modify the log to add, modify or obscure some information.
+
+Usage:
+  MSLogParser modify [command] [options]
+
+Options:
+  --version       Show version information
+  -?, -h, --help  Show help and usage information
+
+Commands:
+  privacy <mailstore.log>            Remove (some) potentially personal/private information.
+  maketimesrelative <mailstore.log>  Timestamp from the start of execution, and individual line timing.
+  linenumbers <mailstore.log>        Add line numbers to each (significant) line.
+  uniqueexceptions <mailstore.log>
+
+privacy
+Description:
+  Remove (some) potentially personal/private information.
+
+Usage:
+  MSLogParser modify privacy [<mailstorelogs>...] [options]
+
+Arguments:
+  <mailstore.log>  One or more logs to parse.
+
+Options:
+  -o, --output <report.txt | report.log>  Write the results to this file.
+  -O, --overwrite                         Allow the report to overwrite an existing file.
+  --console                               Print the report to the console.
+  --interactive                           Log the output to a slightly buggy interactive window.
+  --maketimesrelative                     Timestamp from the start of execution, and individual line timing.
+  --linenumbers                           Add line numbers to each (significant) line.
+  --version                               Show version information
+  -?, -h, --help                          Show help and usage information
+
+
+
+maketimesrelative
+Description:
+  Timestamp from the start of execution, and individual line timing.
+
+Usage:
+  MSLogParser modify maketimesrelative [<mailstorelogs>...] [options]
+
+Arguments:
+  <mailstore.log>  One or more logs to parse.
+
+Options:
+  -o, --output <report.txt | report.log>  Write the results to this file.
+  -O, --overwrite                         Allow the report to overwrite an existing file.
+  --console                               Print the report to the console.
+  --interactive                           Log the output to a slightly buggy interactive window.
+  --privacy                               Remove (some) potentially personal/private information.
+  --linenumbers                           Add line numbers to each (significant) line.
+  --version                               Show version information
+  -?, -h, --help                          Show help and usage information
+
+
+
+linenumbers
+Description:
+  Add line numbers to each (significant) line.
+
+Usage:
+  MSLogParser modify linenumbers [<mailstorelogs>...] [options]
+
+Arguments:
+  <mailstore.log>  One or more logs to parse.
+
+Options:
+  -o, --output <report.txt | report.log>  Write the results to this file.
+  -O, --overwrite                         Allow the report to overwrite an existing file.
+  --console                               Print the report to the console.
+  --interactive                           Log the output to a slightly buggy interactive window.
+  --privacy                               Remove (some) potentially personal/private information.
+  --maketimesrelative                     Timestamp from the start of execution, and individual line timing.
+  --version                               Show version information
+  -?, -h, --help                          Show help and usage information
+
+
+
+uniqueexceptions
+Description:
+
+Usage:
+  MSLogParser modify uniqueexceptions [<mailstorelogs>...] [options]
+
+Arguments:
+  <mailstore.log>  One or more logs to parse.
+
+Options:
+  -o, --output <report.txt | report.log>  Write the results to this file.
+  -O, --overwrite                         Allow the report to overwrite an existing file.
+  --console                               Print the report to the console.
+  --interactive                           Log the output to a slightly buggy interactive window.
+  --privacy                               Remove (some) potentially personal/private information.
+  --maketimesrelative                     Timestamp from the start of execution, and individual line timing.
+  --linenumbers                           Add line numbers to each (significant) line.
+  --version                               Show version information
+  -?, -h, --help                          Show help and usage information
+
+
+
+filter
+Description:
+  Filter the log
+
+Usage:
+  MSLogParser filter [command] [options]
+
+Options:
+  --version       Show version information
+  -?, -h, --help  Show help and usage information
+
+Commands:
+  exceptions <mailstore.log>        Description not defined {exceptions}
+  uniqueexceptions <mailstore.log>  Find all unique exceptions.
+
+exceptions
+Description:
+  Description not defined {exceptions}
+
+Usage:
+  MSLogParser filter exceptions [<mailstorelogs>...] [options]
+
+Arguments:
+  <mailstore.log>  One or more logs to parse.
+
+Options:
+  -o, --output <report.txt | report.log>  Write the results to this file.
+  -O, --overwrite                         Allow the report to overwrite an existing file.
+  --console                               Print the report to the console.
+  --interactive                           Log the output to a slightly buggy interactive window.
+  --uniqueexceptions                      Find all unique exceptions.
+  --version                               Show version information
+  -?, -h, --help                          Show help and usage information
+
+
+
+uniqueexceptions
+Description:
+  Find all unique exceptions.
+
+Usage:
+  MSLogParser filter uniqueexceptions [<mailstorelogs>...] [options]
+
+Arguments:
+  <mailstore.log>  One or more logs to parse.
+
+Options:
+  -o, --output <report.txt | report.log>  Write the results to this file.
+  -O, --overwrite                         Allow the report to overwrite an existing file.
+  --console                               Print the report to the console.
+  --interactive                           Log the output to a slightly buggy interactive window.
+  --exceptions                            Description not defined {exceptions}
+  --version                               Show version information
+  -?, -h, --help                          Show help and usage information
+
+
+
+report
+Description:
+  Analyze logfile and generate reports
+
+Usage:
+  MSLogParser report [command] [options]
+
+Options:
+  --version       Show version information
+  -?, -h, --help  Show help and usage information
+
+Commands:
+  ServerUnmappableException <mailstore.log>  Generate a report showing unique e-mail addresses from "ServerUnmappableException" log entries.
+
+ServerUnmappableException
+Description:
+  Generate a report showing unique e-mail addresses from "ServerUnmappableException" log entries.
+
+Usage:
+  MSLogParser ServerUnmappableException [<mailstorelogs>...] [options]
+
+Arguments:
+  <mailstore.log>  One or more logs to parse.
+
+Options:
+  -o, --output <report.txt | report.log>  Write the results to this file.
+  -O, --overwrite                         Allow the report to overwrite an existing file.
+  --console                               Print the report to the console.
+  --interactive                           Log the output to a slightly buggy interactive window.
+  --domain <domain>                       Limit report to one or more domains (default is all).
+  --remove <remove>                       Remove one or more domains from the report.
+  --version                               Show version information
+  -?, -h, --help                          Show help and usage information
+
+
+
+ServerUnmappableException
+Description:
+  Generate a report showing unique e-mail addresses from "ServerUnmappableException" log entries.
+
+Usage:
+  MSLogParser ServerUnmappableException [<mailstorelogs>...] [options]
+
+Arguments:
+  <mailstore.log>  One or more logs to parse.
+
+Options:
+  -o, --output <report.txt | report.log>  Write the results to this file.
+  -O, --overwrite                         Allow the report to overwrite an existing file.
+  --console                               Print the report to the console.
+  --interactive                           Log the output to a slightly buggy interactive window.
+  --domain <domain>                       Limit report to one or more domains (default is all).
+  --remove <remove>                       Remove one or more domains from the report.
+  --version                               Show version information
+  -?, -h, --help                          Show help and usage information
+
+
+

@@ -1,0 +1,31 @@
+16:50:12.198 [5] EXCEPTION: MailboxImportWorker.ProcessMailboxMessage
+	MailStore.Common.Interfaces.ServerUnmappableException: MailStore is unable to determine where to store this email. Please ensure that e-mail addresses are specified in the users' settings. Senders and recipients: dianne.k.mcclure@trashymail.com, abby.hernandez@example.com
+	   at 22_4_0_21151_CLIENT_ndbkhcjfbb.ProcessMailboxMessageMultidrop(22_4_0_21151_CLIENT_ndbkhcjeuf mailboxFolder, 22_4_0_21151_CLIENT_ndbkhcjfgk msg, Nullable`1 arcDateUtc)
+	   at 22_4_0_21151_CLIENT_ndbkhcjfbb.ProcessMailboxMessage(22_4_0_21151_CLIENT_ndbkhcjeuf mailboxFolder, 22_4_0_21151_CLIENT_ndbkhcjfgk msg, Nullable`1 arcDateUtc, 22_4_0_21151_CLIENT_wefdfnlqyj& skipReason)
+	   at 22_4_0_21151_CLIENT_ndbkhcjfbb.ProcessSourceFolder(22_4_0_21151_CLIENT_ndbkhcjeuf sourceFolder)
+16:50:12.198 [5] INFO: Item Status: skipped_unmappable
+16:50:12.261 [5] EXCEPTION: MailboxImportWorker.ProcessMailboxMessage
+	MailStore.Common.Interfaces.ServerUnmappableException: MailStore is unable to determine where to store this email. Please ensure that e-mail addresses are specified in the users' settings. Senders and recipients: joshua.d.kellogg@spambob.com, abby.hernandez@example.com
+	   at 22_4_0_21151_CLIENT_ndbkhcjfbb.ProcessMailboxMessageMultidrop(22_4_0_21151_CLIENT_ndbkhcjeuf mailboxFolder, 22_4_0_21151_CLIENT_ndbkhcjfgk msg, Nullable`1 arcDateUtc)
+	   at 22_4_0_21151_CLIENT_ndbkhcjfbb.ProcessMailboxMessage(22_4_0_21151_CLIENT_ndbkhcjeuf mailboxFolder, 22_4_0_21151_CLIENT_ndbkhcjfgk msg, Nullable`1 arcDateUtc, 22_4_0_21151_CLIENT_wefdfnlqyj& skipReason)
+	   at 22_4_0_21151_CLIENT_ndbkhcjfbb.ProcessSourceFolder(22_4_0_21151_CLIENT_ndbkhcjeuf sourceFolder)
+16:50:12.261 [5] INFO: Item Status: skipped_unmappable
+
+15:11:49.881 [5] INFO: Creating authentication session for user example.user@example.com (OpenID connect).
+
+15:11:53.357 [5] INFO: User example.user@example.com (example user) logged in successfully. IsAdmin: False
+15:12:16.843 [27] INFO: Searching folder example.user@example.com in archive store 39...
+
+15:16:47.585 [51] INFO: Authenticating user mbx-01234567890abcdef
+15:16:47.585 [51] INFO: POP3 command sent: USER mbx-01234567890abcdef
+
+13:35:11.756 [79] INFO: EWS Settings: MailboxEmailAddress=example.user@example.com, PublicFolders=False, Timeout=300000
+13:35:12.647 [79] INFO:     Source Mailbox Name:             example.user
+13:35:12.647 [79] INFO:     Target User Name:                example.user@example.com
+13:35:12.678 [79] INFO: Trying to find an entry in the mailbox cache. Key: EwsMailbox$1$https://exchangedc.example.com/EWS/Exchange.asmx$mailstoreserver$example.user@example.com$0$AAMkAGUzZGFkMGU0LWJmM2YtNDU0NS05YzU1LWFhYzg4NWUyZWU2NwAuAAAAAAAuBvRwi26lRrxTP9wpcGhFAQDLNYvWJDm4ToURpUtJhh6PAAAAObU1AAA=
+
+13:35:11.741 [79] INFO: Notify:SetTitle 'example.user@example.com <example.user@example.com>'
+
+But not: 
+15:16:47.523 [51] INFO: Notify:SetTitle '365 via Gateway'
+
